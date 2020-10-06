@@ -6,8 +6,12 @@ public class PacmanGame extends Game {
 
 	public PacmanGame(int maxTurn, long time, Maze maze) {
 		super(maxTurn, time);
+		
 		_maze = maze;
 		_agents = new ArrayList<Agent>();
+		
+		super.init();
+		
 	}
 	
 	public Maze getMaze() {
@@ -21,6 +25,7 @@ public class PacmanGame extends Game {
 	@Override
 	public void initializeGame() {
 		System.out.println("Méthode initializeGame()");
+		
 		for(PositionAgent posFantome : _maze.getGhosts_start()) {
 			AgentFantome newFantome = new AgentFantome(posFantome.getX(), posFantome.getY(), posFantome.getDir());
 			_agents.add(newFantome);
@@ -34,6 +39,7 @@ public class PacmanGame extends Game {
 	@Override
 	public void takeTurn() {
 		notifierObservers("taketurn");
+		
 	}
 
 	@Override
@@ -42,7 +48,21 @@ public class PacmanGame extends Game {
 
 	@Override
 	public boolean gameContinue() {
-		return true;
+		
+		//Check there is still food or capsules in the maze;
+		int width = _maze.getSizeX();
+		int height = _maze.getSizeY();
+		
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				if(_maze.isFood(i, j) || _maze.isCapsule(i, j)) { //if any food is available, game continues
+					return true;
+				}
+			}
+		}
+		
+		
+		return false;
 	}
 	
 	public boolean isLegalMove(Agent agent, AgentAction action) {
@@ -53,4 +73,6 @@ public class PacmanGame extends Game {
 		agent.setX(agent.getX() + action.get_vx());
 		agent.setY(agent.getY() + action.get_vy());
 	}
+	
+	
 }

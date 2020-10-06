@@ -123,6 +123,7 @@ public class ViewCommand implements Observer{
 		
 		_jframe.setContentPane(container);
 		_jframe.setVisible(true);
+		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	@Override

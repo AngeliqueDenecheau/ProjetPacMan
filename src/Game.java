@@ -13,7 +13,7 @@ public abstract class Game implements Runnable, Observable {
 		_maxturn = maxturn;
 		_time = time;
 		_observateurs = new ArrayList<Observer>();
-		init();
+		//init();
 	}
 	
 	public int getTurn() {return _turn;}

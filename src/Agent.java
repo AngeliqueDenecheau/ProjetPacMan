@@ -33,4 +33,5 @@ public abstract class Agent {
 	public int getDirection() {
 		return _direction;
 	}
+	
 }

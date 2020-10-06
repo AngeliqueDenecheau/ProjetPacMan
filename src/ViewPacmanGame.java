@@ -40,6 +40,7 @@ public class ViewPacmanGame implements Observer {
 		container.add(_labyrinthe, BorderLayout.CENTER);
 		_jframe.add(container);
 		_jframe.setVisible(true);
+		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	@Override
