@@ -3,6 +3,7 @@ public class SimpleGame extends Game {
 	
 	public SimpleGame(int maxTurn, long time) {
 		super(maxTurn, time);
+		init();
 	}
 
 	@Override

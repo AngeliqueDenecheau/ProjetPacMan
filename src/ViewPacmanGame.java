@@ -44,6 +44,10 @@ public class ViewPacmanGame implements Observer {
 
 	@Override
 	public void actualiser(Game game, String modification) {
-		
+		switch(modification) {
+			case "taketurn":
+				System.out.println("Test");
+				_labyrinthe.repaint();
+		}
 	}
 }
