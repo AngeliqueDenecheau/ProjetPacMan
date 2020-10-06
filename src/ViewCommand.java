@@ -41,9 +41,9 @@ public class ViewCommand implements Observer{
 		Dimension windowSize = _jframe.getSize();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
-		int dx = centerPoint.x - windowSize.width / 2;
-		int dy = centerPoint.y - windowSize.height / 2 - 350;
-		_jframe.setLocation(dx, dy);
+		//int dx = centerPoint.x - windowSize.width / 2;
+		//int dy = centerPoint.y - windowSize.height / 2 - 350;
+		_jframe.setLocation(0, 0);
 		
 		/*Color red = new Color(255, 0, 0);
 		Color green = new Color(0, 255, 0);
@@ -75,41 +75,24 @@ public class ViewCommand implements Observer{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_controleurGame.start();
-				_restartButton.setEnabled(false);
-				_runButton.setEnabled(true);
-				_stepButton.setEnabled(false);
-				_pauseButton.setEnabled(false);
 			}
 		});
 		_runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_sliderTitle.setText("test");
 				_controleurGame.run();
-				_restartButton.setEnabled(true);
-				_runButton.setEnabled(false);
-				_stepButton.setEnabled(false);
-				_pauseButton.setEnabled(true);
 			}
 		});
 		_stepButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_controleurGame.step();
-				_restartButton.setEnabled(true);
-				_runButton.setEnabled(true);
-				_stepButton.setEnabled(true);
-				_pauseButton.setEnabled(false);
 			}
 		});
 		_pauseButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_controleurGame.pause();
-				_restartButton.setEnabled(true);
-				_runButton.setEnabled(true);
-				_stepButton.setEnabled(true);
-				_pauseButton.setEnabled(false);
 			}
 		});
 		
@@ -132,7 +115,7 @@ public class ViewCommand implements Observer{
 			}
 		});
 		bottom_container.add(slider_container);
-		_nbrTours = new JLabel("Tour : 5", SwingConstants.CENTER);
+		_nbrTours = new JLabel("Tour : 0", SwingConstants.CENTER);
 		bottom_container.add(_nbrTours);
 		
 		container.add(top_container);
@@ -143,7 +126,36 @@ public class ViewCommand implements Observer{
 	}
 	
 	@Override
-	public void actualiser(String msg) {
-		_nbrTours.setText(msg);
+	public void actualiser(Game game, String modification) {
+		switch(modification) {
+		case "pause":
+			_restartButton.setEnabled(true);
+			_runButton.setEnabled(true);
+			_stepButton.setEnabled(true);
+			_pauseButton.setEnabled(false);
+			break;
+		case "step":
+			_restartButton.setEnabled(true);
+			_runButton.setEnabled(true);
+			_stepButton.setEnabled(true);
+			_pauseButton.setEnabled(false);
+			break;
+		case "start":
+			_nbrTours.setText("Tour : " + game.getTurn());
+			_restartButton.setEnabled(false);
+			_runButton.setEnabled(true);
+			_stepButton.setEnabled(true);
+			_pauseButton.setEnabled(false);
+			break;
+		case "run":
+			_restartButton.setEnabled(true);
+			_runButton.setEnabled(false);
+			_stepButton.setEnabled(false);
+			_pauseButton.setEnabled(true);
+			break;
+		case "taketurn":
+			_nbrTours.setText("Tour : " + game.getTurn());
+			break;
+		}
 	}
 }

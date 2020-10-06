@@ -20,13 +20,13 @@ public class ViewSimpleGame implements Observer {
 		
 		_jframe = new JFrame();
 		_jframe.setTitle("Game");
-		_jframe.setSize(new Dimension(1400, 700));
+		_jframe.setSize(new Dimension(500, 500));
 		Dimension windowSize = _jframe.getSize();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
-		int dx = centerPoint.x - windowSize.width / 2;
-		int dy = centerPoint.y - windowSize.height / 2 - 350;
-		_jframe.setLocation(dx, dy);
+		//int dx = centerPoint.x - windowSize.width / 2;
+		//int dy = centerPoint.y - windowSize.height / 2 - 350;
+		_jframe.setLocation(1400, 0);
 		
 		JPanel container = new JPanel();
 		container.setLayout(new GridLayout(2, 1));
@@ -40,7 +40,7 @@ public class ViewSimpleGame implements Observer {
 	}
 
 	@Override
-	public void actualiser(String msg) {
-		_etat.setText(msg);
+	public void actualiser(Game game, String modification) {
+		_etat.setText(modification);
 	}
 }

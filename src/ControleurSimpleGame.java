@@ -13,27 +13,30 @@ public class ControleurSimpleGame implements InterfaceControleur {
 	@Override
 	public void start() {
 		_simplegame.init();
+		_simplegame.notifierObservers("start");
 	}
 
 	@Override
 	public void step() {
 		_simplegame.step();
+		_simplegame.notifierObservers("step");
 	}
 
 	@Override
 	public void run() {
-		_simplegame.run();
+		_simplegame.launch();
+		_simplegame.notifierObservers("run");
 	}
 
 	@Override
 	public void pause() {
 		_simplegame.pause();
+		_simplegame.notifierObservers("pause");
 	}
 
 	@Override
 	public void setTime(double time) {
 		_simplegame.setTime((long) (1000/time));
-		System.out.println("New Time : " + 1000/time);
 	}
 
 }

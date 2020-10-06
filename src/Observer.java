@@ -1,4 +1,4 @@
 
 public interface Observer {
-	public void actualiser(String msg);
+	public void actualiser(Game game, String modification);
 }

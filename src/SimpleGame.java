@@ -7,22 +7,20 @@ public class SimpleGame extends Game {
 
 	@Override
 	public void initializeGame() {
-		notifierObservers("Méthode initializeGame");		
+		System.out.println("Méthode initializeGame()");
 	}
 
 	@Override
 	public void takeTurn() {
-		notifierObservers("Méthode takeTurn");		
+		notifierObservers("taketurn");
 	}
 
 	@Override
 	public void gameOver() {
-		notifierObservers("Méthode gameOver");		
 	}
 
 	@Override
 	public boolean gameContinue() {
-		notifierObservers("Méthode gameContinue");
 		return true;
 	}
 }

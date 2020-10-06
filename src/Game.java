@@ -13,6 +13,7 @@ public abstract class Game implements Runnable, Observable {
 		_maxturn = maxturn;
 		_time = time;
 		_observateurs = new ArrayList<Observer>();
+		init();
 	}
 	
 	public int getTurn() {return _turn;}
@@ -21,16 +22,17 @@ public abstract class Game implements Runnable, Observable {
 	public void setTime(long time) {_time = time;}
 	
 	public void init() {
+		System.out.println("Méthode init()");
 		_turn = 0;
-		_isRunning = true;
+		_isRunning = false;
 		initializeGame();
-		notifierObservers("Méthode init");
 	}
 	
 	abstract public void initializeGame();
 	
 	// Effectue un seul tour de jeu
 	public void step() {
+		System.out.println("Méthode step()");
 		_turn++;
 		if(gameContinue()) {
 			takeTurn();
@@ -38,8 +40,6 @@ public abstract class Game implements Runnable, Observable {
 			_isRunning = false;
 			gameOver();
 		}
-		System.out.println("Tour " + _turn);
-		notifierObservers("Méthode step " + _turn);
 	}
 	
 	abstract public void takeTurn();
@@ -49,7 +49,7 @@ public abstract class Game implements Runnable, Observable {
 	abstract public boolean gameContinue();
 	
 	public void run() {
-		System.out.println("Commande run effectuée.");
+		System.out.println("Méthode run()");
 		do {
 			step();
 			try {
@@ -58,19 +58,18 @@ public abstract class Game implements Runnable, Observable {
 				e.printStackTrace();
 			}
 		} while (_isRunning);
-		notifierObservers("Méthode run");
 	}
 	
 	public void pause() {
+		System.out.println("Méthode pause()");
 		_isRunning = false;
-		notifierObservers("Méthode pause");
 	}
 	
 	public void launch() {
+		System.out.println("Méthode launch()");
 		_isRunning = true;
 		_thread = new Thread(this);
 		_thread.start();
-		notifierObservers("Méthode launch");
 	}
 
 	public void ajouterObserver(Observer observateur) {
@@ -81,9 +80,9 @@ public abstract class Game implements Runnable, Observable {
 		_observateurs.remove(observateur);
 	}
 
-	public void notifierObservers(String msg) {
+	public void notifierObservers(String modification) {
 		for (Observer observer : _observateurs) {
-			observer.actualiser(msg);
+			observer.actualiser(this, modification);
 		}
 	}
 }
