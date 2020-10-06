@@ -1,5 +1,5 @@
 
-public class SimpleGame extends Game{
+public class SimpleGame extends Game {
 	
 	public SimpleGame(int maxTurn, long time) {
 		super(maxTurn, time);
@@ -7,26 +7,22 @@ public class SimpleGame extends Game{
 
 	@Override
 	public void initializeGame() {
-		System.out.println("Initialisation...");
-		
+		notifierObservers("Méthode initializeGame");		
 	}
 
 	@Override
 	public void takeTurn() {
-		System.out.println("Nouveau tour de jeu.");
-		
+		notifierObservers("Méthode takeTurn");		
 	}
 
 	@Override
 	public void gameOver() {
-		System.out.println("Game Over !");
-		
+		notifierObservers("Méthode gameOver");		
 	}
 
 	@Override
 	public boolean gameContinue() {
-		System.out.println("La partie continue...");
+		notifierObservers("Méthode gameContinue");
 		return true;
 	}
-
 }
