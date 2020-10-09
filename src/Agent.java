@@ -1,3 +1,4 @@
+//Classe abstraite représentant les différents agents : Pacman ou Fantôme
 
 public abstract class Agent {
 	private PositionAgent _position;

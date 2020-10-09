@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 
 public class SimpleGame extends Game {
 	
-	public SimpleGame(int maxTurn, long time) {
-		super(maxTurn, time);
+	public SimpleGame(int maxTurn, long time, Strategie strategie) {
+		super(maxTurn, time, strategie);
 		init();
 	}
 
@@ -23,5 +24,10 @@ public class SimpleGame extends Game {
 	@Override
 	public boolean gameContinue() {
 		return true;
+	}
+
+	@Override
+	public ArrayList<Agent> getAgents() {
+		return null;
 	}
 }

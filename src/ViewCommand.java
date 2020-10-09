@@ -1,3 +1,5 @@
+//Classe affichant le panneau de commandes de la partie
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,21 +43,13 @@ public class ViewCommand implements Observer{
 		Dimension windowSize = _jframe.getSize();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
-		//int dx = centerPoint.x - windowSize.width / 2;
-		//int dy = centerPoint.y - windowSize.height / 2 - 350;
 		_jframe.setLocation(0, 0);
-		
-		/*Color red = new Color(255, 0, 0);
-		Color green = new Color(0, 255, 0);
-		Color blue = new Color(0, 0, 255);*/
 		
 		JPanel container = new JPanel();
 		container.setLayout(new GridLayout(2, 1));
-		//container.setBackground(red);
 		
 		JPanel top_container = new JPanel();
 		top_container.setLayout(new GridLayout(1, 4));
-		//top_container.setBackground(green);
 		Icon restartIcon = new ImageIcon("./icons/icon_restart.png");
 		_restartButton = new JButton(restartIcon);
 		_restartButton.setEnabled(false);
@@ -98,7 +92,6 @@ public class ViewCommand implements Observer{
 		
 		JPanel bottom_container = new JPanel();
 		bottom_container.setLayout(new GridLayout(1, 2));
-		//bottom_container.setBackground(blue);
 		JPanel slider_container = new JPanel();
 		slider_container.setLayout(new GridLayout(2, 1));
 		_sliderTitle = new JLabel("Nombre de tours par seconde", SwingConstants.CENTER);
@@ -123,6 +116,7 @@ public class ViewCommand implements Observer{
 		
 		_jframe.setContentPane(container);
 		_jframe.setVisible(true);
+		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	@Override
@@ -155,6 +149,15 @@ public class ViewCommand implements Observer{
 			break;
 		case "taketurn":
 			_nbrTours.setText("Tour : " + game.getTurn());
+			break;
+		case "ghostwin":
+		case "pacmanwin":
+			_restartButton.setEnabled(true);
+			_runButton.setEnabled(false);
+			_stepButton.setEnabled(false);
+			_pauseButton.setEnabled(false);
+			break;
+		default:
 			break;
 		}
 	}

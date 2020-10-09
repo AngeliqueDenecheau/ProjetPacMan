@@ -222,6 +222,16 @@ public class PanelPacmanGame extends JPanel {
 	public void setGhosts_pos(ArrayList<PositionAgent> ghosts_pos) {
 		this.ghosts_pos = ghosts_pos;
 	}
-
 	
+	public void updatePositions(ArrayList<Agent> agents) {
+		pacmans_pos = new ArrayList<PositionAgent>();
+		ghosts_pos = new ArrayList<PositionAgent>();
+		for(Agent agent : agents) {
+			if(agent instanceof Pacman) {
+				pacmans_pos.add(agent.getPosition());
+			}else {
+				ghosts_pos.add(agent.getPosition());				
+			}
+		}		
+	}	
 }
