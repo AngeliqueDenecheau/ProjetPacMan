@@ -1,9 +1,12 @@
+//Classe affichant la grille de jeu
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -14,7 +17,7 @@ import javax.swing.SwingConstants;
 public class ViewPacmanGame implements Observer {
 	private JFrame _jframe;
 	private JLabel _tourCourant;
-	private JPanel _labyrinthe;
+	private PanelPacmanGame _labyrinthe;
 	private InterfaceControleur _controleurGame;
 	
 	public ViewPacmanGame(Observable observable, InterfaceControleur controleur, Maze maze) {
@@ -27,27 +30,37 @@ public class ViewPacmanGame implements Observer {
 		Dimension windowSize = _jframe.getSize();
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
-		//int dx = centerPoint.x - windowSize.width / 2;
-		//int dy = centerPoint.y - windowSize.height / 2 - 350;
 		_jframe.setLocation(1400, 0);
 		
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
-		_tourCourant = new JLabel("Tour courant : 0", SwingConstants.CENTER);
+		_tourCourant = new JLabel("Tour : 0", SwingConstants.CENTER);
 		_tourCourant.setPreferredSize(new Dimension(maze.getSizeX()*75, 50));
 		container.add(_tourCourant, BorderLayout.PAGE_START);
 		_labyrinthe = new PanelPacmanGame(maze);
 		container.add(_labyrinthe, BorderLayout.CENTER);
 		_jframe.add(container);
 		_jframe.setVisible(true);
+		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	@Override
 	public void actualiser(Game game, String modification) {
 		switch(modification) {
+			case "start":
+				_tourCourant.setText("Tour : " + game.getTurn());
+				break;
 			case "taketurn":
-				System.out.println("Test");
+				_tourCourant.setText("Tour : " + game.getTurn());
+				_labyrinthe.updatePositions(game.getAgents());
 				_labyrinthe.repaint();
+				break;
+			case "pacmanwin":
+				_tourCourant.setText("Victoire des Pacmans !");
+				break;
+			case "ghostwin":
+				_tourCourant.setText("Victoire des Fantômes !");
+				break;
 		}
 	}
 }

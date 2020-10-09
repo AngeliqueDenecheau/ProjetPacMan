@@ -1,14 +1,18 @@
+//Classe représenatant une partie de Pacman
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.print.DocFlavor.INPUT_STREAM;
+
 public class PacmanGame extends Game {
 	private Maze _maze;
 	private ArrayList<Agent> _agents;
 
-	public PacmanGame(int maxTurn, long time, Maze maze) {
-		super(maxTurn, time);
+	public PacmanGame(int maxTurn, long time, Maze maze, Strategie strategie) {
+		super(maxTurn, time, strategie);
 		_maze = maze;
 		_agents = new ArrayList<Agent>();
 		init();
@@ -23,55 +27,103 @@ public class PacmanGame extends Game {
 	}
 
 	@Override
+	//Initialise la partie
 	public void initializeGame() {
-		System.out.println("Méthode initializeGame()");
 		for(PositionAgent posFantome : _maze.getGhosts_start()) {
-			AgentFantome newFantome = new AgentFantome(new PositionAgent(posFantome.getX(), posFantome.getY(), posFantome.getDir()));
+			Ghost newFantome = new Ghost(new PositionAgent(posFantome.getX(), posFantome.getY(), posFantome.getDir()));
 			_agents.add(newFantome);
 		}
 		for(PositionAgent posPacman : _maze.getPacman_start()) {
-			AgentPacman newPacman = new AgentPacman(new PositionAgent(posPacman.getX(), posPacman.getY(), posPacman.getDir()));
+			Pacman newPacman = new Pacman(new PositionAgent(posPacman.getX(), posPacman.getY(), posPacman.getDir()));
 			_agents.add(newPacman);
 		}
 	}
 
 	@Override
+	//Effectue un tour de jeu
 	public void takeTurn() {
-		System.out.println("Méthode taketurn()");
 		for(Agent agent : _agents) {
-			List<Integer> directions = new ArrayList<Integer>();
-			directions.add(0);
-			directions.add(1);
-			directions.add(2);
-			directions.add(3);
-			Collections.shuffle(directions);
-			while(!directions.isEmpty()) {
-				AgentAction action = new AgentAction(directions.get(0));
-				if(isLegalMove(agent, action)) {
-					moveAgent(agent, action);
-					break;
-				}
-				directions.remove(0);
-			}
+			AgentAction action = getStrategy().getAction(agent, _maze);
+			moveAgent(agent, action);
 		}
+		killAgents();
 		notifierObservers("taketurn");
 	}
 
 	@Override
+	//Affiche le message de fin de partie
 	public void gameOver() {
+		boolean foodRestante = false;
+		for(int i = 0; i < _maze.getSizeX(); i++) {
+			for(int j = 0; j < _maze.getSizeY(); j++) {
+				if(_maze.isFood(i, j)) {
+					foodRestante = true;
+					break;
+				}
+			}
+			if(foodRestante) break;
+		}
+		if(!foodRestante) {
+			notifierObservers("pacmanwin");
+			return;
+		}
+		notifierObservers("ghostwin");
 	}
 
 	@Override
+	//Renvoie true si la partie doit continuer, false sinon
 	public boolean gameContinue() {
-		return true;
+		if(getTurn() > getMaxTurn()) return false;
+		boolean foodRestante = false;
+		for(int i = 0; i < _maze.getSizeX(); i++) {
+			for(int j = 0; j < _maze.getSizeY(); j++) {
+				//if any food is available, game continues
+				if(_maze.isFood(i, j)) {
+					foodRestante = true;
+					break;
+				}
+			}
+			if(foodRestante) break;
+		}
+		boolean pacmanRestant = false;
+		for(Agent agent : _agents) {
+			if(agent instanceof Pacman) {
+				pacmanRestant = true;
+				break;
+			}
+		}
+		return foodRestante && pacmanRestant;
 	}
 	
-	public boolean isLegalMove(Agent agent, AgentAction action) {
-		return !_maze.isWall(agent.getPosition().getX() + action.get_vx(), agent.getPosition().getY() + action.get_vy());
-	}
-	
+	//Effectue le déplacement d'un agent en fonctin d'une action donnée
 	public void moveAgent(Agent agent, AgentAction action) {
 		agent.setPosition(new PositionAgent(agent.getPosition().getX() + action.get_vx(), agent.getPosition().getY() + action.get_vy(), action.get_direction()));
-		if(_maze.isFood(agent.getPosition().getX(), agent.getPosition().getY()) && (agent instanceof AgentPacman)) _maze.setFood(agent.getPosition().getX(), agent.getPosition().getY(), false);
+		if(agent instanceof Pacman) {
+			if(_maze.isFood(agent.getPosition().getX(), agent.getPosition().getY())) _maze.setFood(agent.getPosition().getX(), agent.getPosition().getY(), false);
+			if(_maze.isCapsule(agent.getPosition().getX(), agent.getPosition().getY())) {
+				_maze.setCapsule(agent.getPosition().getX(), agent.getPosition().getY(), false);
+				setTimerCapsule();
+			}
+		}
+	}
+	
+	//Teste si un pacman (ou un fantôme si une capsule a été récupérée) a été mangé et le supprime de la liste des agents dans ce cas
+	public void killAgents() {
+		for(int i = 0; i < _agents.size() - 1; i++) {
+			for(int j = i+1; j < _agents.size(); j++) {
+				if(_agents.get(i).getPosition().getX() == _agents.get(j).getPosition().getX() && _agents.get(i).getPosition().getY() == _agents.get(j).getPosition().getY()) {
+					if(_agents.get(i) instanceof Pacman && _agents.get(j) instanceof Ghost) {
+						_agents.remove((getTimerCapsule() > 0) ? j : i);
+						i--;
+						break;
+					}
+					if(_agents.get(i) instanceof Ghost && _agents.get(j) instanceof Pacman) {
+						_agents.remove((getTimerCapsule() > 0) ? i : j);
+						i--;
+						break;
+					}
+				}
+			}
+		}
 	}
 }
