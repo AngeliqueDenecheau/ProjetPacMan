@@ -12,18 +12,16 @@ public abstract class Game implements Runnable, Observable {
 	private Thread _thread;
 	private long _time;
 	private ArrayList<Observer> _observateurs;
-	private Strategie _strategy;
+	private Strategie _strategiePacMan;
+	private Strategie _strategieFantomes;
 	private int _timerCapsule;
 
-	public Game(int maxturn, long time, Strategie strategie) {
+	public Game(int maxturn, long time, Strategie strategiePacMan, Strategie strategieFantomes) {
 		_maxturn = maxturn;
 		_time = time;
 		_observateurs = new ArrayList<Observer>();
-<<<<<<< HEAD
-		//init();
-=======
-		_strategy = strategie;
->>>>>>> b493e2c2bfe649c6e1e8676de5960286e2d2c630
+		_strategiePacMan = strategiePacMan;
+		_strategieFantomes = strategieFantomes;
 	}
 	
 	//Setters et getters
@@ -33,7 +31,8 @@ public abstract class Game implements Runnable, Observable {
 	public boolean isRunning() {return _isRunning;}
 	public void setOver(boolean over) {_over = over;}
 	public void setTime(long time) {_time = time;}
-	public Strategie getStrategy() {return _strategy;}
+	public Strategie getStrategyPacMan() {return _strategiePacMan;}
+	public Strategie getStrategyFantomes() {return _strategieFantomes;}
 	public int getTimerCapsule() {return _timerCapsule;}
 	public void setTimerCapsule(int timer) {_timerCapsule = timer;}
 	
@@ -109,7 +108,8 @@ public abstract class Game implements Runnable, Observable {
 	
 	public void keyPressed(int code) {
 		_isRunning = true;
-		_strategy.keyPressed(code);
+		_strategiePacMan.keyPressed(code);
+		_strategieFantomes.keyPressed(code);
 		step();
 	}
 }

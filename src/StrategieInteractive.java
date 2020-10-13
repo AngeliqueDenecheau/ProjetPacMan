@@ -36,6 +36,6 @@ public class StrategieInteractive extends Strategie {
 			System.out.println("Default");
 			_action = 4;
 			break;
-	}
+		}
 	}
 }

@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-import java.util.concurrent.ThreadLocalRandom;
-
-
-public class StrategieAleatoire extends Strategie{
-	
-	public AgentAction chooseMove(Agent agent, Maze maze) {
-		
-		int randAction = ThreadLocalRandom.current().nextInt(0, 4 + 1);
-		
-		agent.setDirection(randAction);
-		
-		AgentAction action = new AgentAction(agent.getDirection());
-		
-		return action;
-	}
-
-=======
 //Classe représentant la stratégie de déplacement aléatoire des agents
 
 import java.awt.event.KeyEvent;
@@ -48,5 +30,4 @@ public class StrategieAleatoire extends Strategie {
 
 	@Override
 	protected void keyPressed(int code) {}
->>>>>>> b493e2c2bfe649c6e1e8676de5960286e2d2c630
 }

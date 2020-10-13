@@ -13,22 +13,11 @@ public class PacmanGame extends Game {
 	private String _mazeFilename;
 	private ArrayList<Agent> _agents;
 
-<<<<<<< HEAD
-	public PacmanGame(int maxTurn, long time, Maze maze) {
-		super(maxTurn, time);
-		
-		_maze = maze;
-		_agents = new ArrayList<Agent>();
-		
-		super.init();
-		
-=======
-	public PacmanGame(int maxTurn, long time, String mazeFilename, Strategie strategie) {
-		super(maxTurn, time, strategie);
+	public PacmanGame(int maxTurn, long time, String mazeFilename, Strategie strategiePacMan, Strategie strategieFantomes) {
+		super(maxTurn, time, strategiePacMan, strategieFantomes);
 		_mazeFilename = mazeFilename;
 		_agents = new ArrayList<Agent>();
 		init();
->>>>>>> b493e2c2bfe649c6e1e8676de5960286e2d2c630
 	}
 	
 	public Maze getMaze() {
@@ -42,17 +31,12 @@ public class PacmanGame extends Game {
 	@Override
 	//Initialise la partie
 	public void initializeGame() {
-<<<<<<< HEAD
-		System.out.println("Méthode initializeGame()");
-		
-=======
 		try {
 			_maze = new Maze("./layouts/" + _mazeFilename);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		_agents = new ArrayList<Agent>();
->>>>>>> b493e2c2bfe649c6e1e8676de5960286e2d2c630
 		for(PositionAgent posFantome : _maze.getGhosts_start()) {
 			Ghost newFantome = new Ghost(new PositionAgent(posFantome.getX(), posFantome.getY(), posFantome.getDir()));
 			_agents.add(newFantome);
@@ -61,19 +45,27 @@ public class PacmanGame extends Game {
 			Pacman newPacman = new Pacman(new PositionAgent(posPacman.getX(), posPacman.getY(), posPacman.getDir()));
 			_agents.add(newPacman);
 		}
+		this.getStrategyPacMan().setGame(this);
+		this.getStrategyFantomes().setGame(this);
 	}
 
 	@Override
 	//Effectue un tour de jeu
 	public void takeTurn() {
 		for(Agent agent : _agents) {
-			AgentAction action = getStrategy().getAction(agent, _maze);
-			moveAgent(agent, action);
+			if(agent instanceof Pacman) {
+				AgentAction action = getStrategyPacMan().getAction(agent, _maze);
+				moveAgent(agent, action);
+			}
+			else {
+				AgentAction action = getStrategyFantomes().getAction(agent, _maze);
+				moveAgent(agent, action);
+			}
+			
 		}
 		killAgents();
 		setTimerCapsule(getTimerCapsule() - 1);
 		notifierObservers("taketurn");
-		
 	}
 
 	@Override
@@ -104,23 +96,6 @@ public class PacmanGame extends Game {
 	@Override
 	//Renvoie true si la partie doit continuer, false sinon
 	public boolean gameContinue() {
-<<<<<<< HEAD
-		
-		//Check there is still food or capsules in the maze;
-		int width = _maze.getSizeX();
-		int height = _maze.getSizeY();
-		
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
-				if(_maze.isFood(i, j) || _maze.isCapsule(i, j)) { //if any food is available, game continues
-					return true;
-				}
-			}
-		}
-		
-		
-		return false;
-=======
 		if(getTurn() >= getMaxTurn()) return false;
 		boolean foodRestante = false;
 		for(int i = 0; i < _maze.getSizeX(); i++) {
@@ -141,7 +116,6 @@ public class PacmanGame extends Game {
 			}
 		}
 		return foodRestante && pacmanRestant;
->>>>>>> b493e2c2bfe649c6e1e8676de5960286e2d2c630
 	}
 	
 	//Effectue le déplacement d'un agent en fonctin d'une action donnée
@@ -176,6 +150,4 @@ public class PacmanGame extends Game {
 			}
 		}
 	}
-	
-	
 }

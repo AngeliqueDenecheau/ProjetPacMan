@@ -116,8 +116,6 @@ public class ViewCommand implements Observer{
 		
 		_jframe.setContentPane(container);
 		_jframe.setVisible(true);
-<<<<<<< HEAD
-=======
 		
 		if(_controleurGame.isInteractive()) {
 			_runButton.setEnabled(false);
@@ -126,7 +124,6 @@ public class ViewCommand implements Observer{
 			_nbrTours.setText("Appuiez sur les touches flêchées pour bouger le Pacman.");
 		}
 		
->>>>>>> b493e2c2bfe649c6e1e8676de5960286e2d2c630
 		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	

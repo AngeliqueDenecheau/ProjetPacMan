@@ -1,7 +1,7 @@
 //Classe représentant un Pacman
 
 public class Pacman extends Agent {
-
+	
 	public Pacman(PositionAgent position) {
 		super(position);
 	}
@@ -15,6 +15,7 @@ public class Pacman extends Agent {
 
 		return false;
 	}
+	
 
 
 	public void die() {

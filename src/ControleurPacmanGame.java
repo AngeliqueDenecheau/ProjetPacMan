@@ -15,7 +15,7 @@ public class ControleurPacmanGame implements InterfaceControleur {
 	}
 	
 	public boolean isInteractive() {
-		return _pacmangame.getStrategy() instanceof StrategieInteractive;
+		return _pacmangame.getStrategyPacMan() instanceof StrategieInteractive;
 	}
 
 	@Override

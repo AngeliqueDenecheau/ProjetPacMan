@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class SimpleGame extends Game {
 	
-	public SimpleGame(int maxTurn, long time, Strategie strategie) {
-		super(maxTurn, time, strategie);
+	public SimpleGame(int maxTurn, long time, Strategie strategiePacMan, Strategie strategieFantomes) {
+		super(maxTurn, time, strategiePacMan, strategieFantomes);
 		init();
 	}
 

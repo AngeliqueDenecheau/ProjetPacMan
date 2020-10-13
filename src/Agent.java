@@ -14,5 +14,4 @@ public abstract class Agent {
 	public void setPosition(PositionAgent position) {
 		_position = position;
 	}
-	
 }
