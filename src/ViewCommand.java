@@ -116,6 +116,14 @@ public class ViewCommand implements Observer{
 		
 		_jframe.setContentPane(container);
 		_jframe.setVisible(true);
+		
+		if(_controleurGame.isInteractive()) {
+			_runButton.setEnabled(false);
+			_slider.setEnabled(false);
+			_sliderTitle.setEnabled(false);
+			_nbrTours.setText("Appuiez sur les touches flêchées pour bouger le Pacman.");
+		}
+		
 		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
@@ -137,8 +145,9 @@ public class ViewCommand implements Observer{
 		case "start":
 			_nbrTours.setText("Tour : " + game.getTurn());
 			_restartButton.setEnabled(false);
+			if(_controleurGame.isInteractive()) break;
 			_runButton.setEnabled(true);
-			_stepButton.setEnabled(true);
+			_stepButton.setEnabled(false);
 			_pauseButton.setEnabled(false);
 			break;
 		case "run":
@@ -152,6 +161,14 @@ public class ViewCommand implements Observer{
 			break;
 		case "ghostwin":
 		case "pacmanwin":
+		case "toursecoules":
+			System.out.println("fin");
+			_restartButton.setEnabled(true);
+			_runButton.setEnabled(false);
+			_stepButton.setEnabled(false);
+			_pauseButton.setEnabled(false);
+			break;
+		case "keypressed":
 			_restartButton.setEnabled(true);
 			_runButton.setEnabled(false);
 			_stepButton.setEnabled(false);

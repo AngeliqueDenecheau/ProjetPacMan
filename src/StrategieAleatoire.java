@@ -1,5 +1,6 @@
 //Classe représentant la stratégie de déplacement aléatoire des agents
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,4 +27,7 @@ public class StrategieAleatoire extends Strategie {
 		}
 		return new AgentAction(4);
 	}
+
+	@Override
+	protected void keyPressed(int code) {}
 }

@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -31,6 +33,19 @@ public class ViewPacmanGame implements Observer {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
 		_jframe.setLocation(1400, 0);
+		if(_controleurGame.isInteractive()) {
+			_jframe.addKeyListener(new KeyListener() {
+				@Override
+				public void keyTyped(KeyEvent e) {}
+				@Override
+				public void keyReleased(KeyEvent e) {}
+				
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT)	_controleurGame.keyPressed(e.getKeyCode());
+				}
+			});
+		}
 		
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
@@ -48,7 +63,7 @@ public class ViewPacmanGame implements Observer {
 	public void actualiser(Game game, String modification) {
 		switch(modification) {
 			case "start":
-				_tourCourant.setText("Tour : " + game.getTurn());
+				_jframe.dispose();
 				break;
 			case "taketurn":
 				_tourCourant.setText("Tour : " + game.getTurn());
@@ -60,6 +75,10 @@ public class ViewPacmanGame implements Observer {
 				break;
 			case "ghostwin":
 				_tourCourant.setText("Victoire des Fantômes !");
+				break;
+			case "toursecoules":
+				_tourCourant.setText("Nombre de tours écoulés !");
+			default:
 				break;
 		}
 	}

@@ -1,3 +1,5 @@
+import java.awt.event.KeyEvent;
+
 //Classe récupérant les actions faîtes par l'utilisateur sur le panneau de commande
 //et effectuant les actions correspondantes.
 
@@ -45,5 +47,11 @@ public class ControleurSimpleGame implements InterfaceControleur {
 	public void setTime(double time) {
 		_simplegame.setTime((long) (1000/time));
 	}
+
+	@Override
+	public void keyPressed(int code) {}
+
+	@Override
+	public boolean isInteractive() {return false;}
 
 }
