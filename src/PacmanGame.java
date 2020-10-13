@@ -1,5 +1,6 @@
 //Classe représenatant une partie de Pacman
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,11 +10,12 @@ import javax.print.DocFlavor.INPUT_STREAM;
 
 public class PacmanGame extends Game {
 	private Maze _maze;
+	private String _mazeFilename;
 	private ArrayList<Agent> _agents;
 
-	public PacmanGame(int maxTurn, long time, Maze maze, Strategie strategie) {
+	public PacmanGame(int maxTurn, long time, String mazeFilename, Strategie strategie) {
 		super(maxTurn, time, strategie);
-		_maze = maze;
+		_mazeFilename = mazeFilename;
 		_agents = new ArrayList<Agent>();
 		init();
 	}
@@ -29,6 +31,12 @@ public class PacmanGame extends Game {
 	@Override
 	//Initialise la partie
 	public void initializeGame() {
+		try {
+			_maze = new Maze("./layouts/" + _mazeFilename);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		_agents = new ArrayList<Agent>();
 		for(PositionAgent posFantome : _maze.getGhosts_start()) {
 			Ghost newFantome = new Ghost(new PositionAgent(posFantome.getX(), posFantome.getY(), posFantome.getDir()));
 			_agents.add(newFantome);
@@ -53,6 +61,11 @@ public class PacmanGame extends Game {
 	@Override
 	//Affiche le message de fin de partie
 	public void gameOver() {
+		setOver(true);
+		if(getTurn() >= getMaxTurn()) {
+			notifierObservers("toursecoules");
+			return;
+		}
 		boolean foodRestante = false;
 		for(int i = 0; i < _maze.getSizeX(); i++) {
 			for(int j = 0; j < _maze.getSizeY(); j++) {
@@ -73,7 +86,7 @@ public class PacmanGame extends Game {
 	@Override
 	//Renvoie true si la partie doit continuer, false sinon
 	public boolean gameContinue() {
-		if(getTurn() > getMaxTurn()) return false;
+		if(getTurn() >= getMaxTurn()) return false;
 		boolean foodRestante = false;
 		for(int i = 0; i < _maze.getSizeX(); i++) {
 			for(int j = 0; j < _maze.getSizeY(); j++) {

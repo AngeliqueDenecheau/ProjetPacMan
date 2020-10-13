@@ -1,5 +1,6 @@
 //Classe abstraite représentant une partie
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public abstract class Game implements Runnable, Observable {
@@ -7,6 +8,7 @@ public abstract class Game implements Runnable, Observable {
 	private int _turn;
 	private int _maxturn;
 	private boolean _isRunning;
+	public boolean _over;
 	private Thread _thread;
 	private long _time;
 	private ArrayList<Observer> _observateurs;
@@ -23,7 +25,9 @@ public abstract class Game implements Runnable, Observable {
 	//Setters et getters
 	public int getTurn() {return _turn;}
 	public int getMaxTurn() {return _maxturn;}
+	public void setRunning(boolean running) {_isRunning = running;}
 	public boolean isRunning() {return _isRunning;}
+	public void setOver(boolean over) {_over = over;}
 	public void setTime(long time) {_time = time;}
 	public Strategie getStrategy() {return _strategy;}
 	public int getTimerCapsule() {return _timerCapsule;}
@@ -40,19 +44,20 @@ public abstract class Game implements Runnable, Observable {
 	public void init() {
 		_turn = 0;
 		_isRunning = false;
+		_over = false;
 		_timerCapsule = 0;
 		initializeGame();
 	}
 	
 	//Effectue un seul tour de jeu
 	public void step() {
+		if(_over) return;
 		System.out.println("Tour " + _turn);
 		_turn++;
-		if(gameContinue()) {
-			takeTurn();
-		}else{
+		takeTurn();
+		if(!gameContinue()) {
 			_isRunning = false;
-			_thread.interrupt();
+			if(_thread != null) _thread.interrupt();
 			gameOver();
 		}
 	}
@@ -60,12 +65,12 @@ public abstract class Game implements Runnable, Observable {
 	//Effectue le déroulement de la partie
 	public void run() {
 		do {
+			step();
 			try {
-				Thread.sleep(_time);
+				if(!Thread.interrupted()) Thread.sleep(_time);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			step();
 		} while (_isRunning);
 	}
 	
@@ -96,5 +101,11 @@ public abstract class Game implements Runnable, Observable {
 		for (Observer observer : _observateurs) {
 			observer.actualiser(this, modification);
 		}
+	}
+	
+	public void keyPressed(int code) {
+		_isRunning = true;
+		_strategy.keyPressed(code);
+		step();
 	}
 }

@@ -1,3 +1,4 @@
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 //Classe représentant une stratégie simple de déplacement des agents :
@@ -17,4 +18,7 @@ public class StrategieSimple extends Strategie {
 		}
 		return StrategieAleatoire.getActionAleatoire(agent, maze);
 	}
+
+	@Override
+	protected void keyPressed(int code) {}
 }
