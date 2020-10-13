@@ -1,37 +1,18 @@
+//Classe abstraite représentant les différents agents : Pacman ou Fantôme
 
 public abstract class Agent {
-	private int _x;
-	private int _y;
-	private int _direction;
+	private PositionAgent _position;
 	
-	public Agent(int x, int y, int direction) {
-		_x = x;
-		_y = y;
-		_direction = direction;
+	public Agent(PositionAgent position) {
+		_position = position;
 	}
 	
-	public void setX(int x) {
-		_x = x;
+	public PositionAgent getPosition() {
+		return _position;
 	}
 	
-	public int getX() {
-		return _x;
-	}
-	
-	public void setY(int y) {
-		_y = y;
-	}
-	
-	public int getY() {
-		return _y;
-	}
-	
-	public void setDirection(int direction) {
-		_direction = direction;
-	}
-	
-	public int getDirection() {
-		return _direction;
+	public void setPosition(PositionAgent position) {
+		_position = position;
 	}
 	
 }
