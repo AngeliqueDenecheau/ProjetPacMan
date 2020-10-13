@@ -93,6 +93,11 @@ public class Test {
 	
 	public static void chooseGhostsStrategy(int nbrJoueurs) {
 		
+		
+		
+		
+		
+		
 	}
 	
 	public static void chooseMaze() {
