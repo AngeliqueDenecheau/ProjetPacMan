@@ -55,6 +55,7 @@ public class PacmanGame extends Game {
 			moveAgent(agent, action);
 		}
 		killAgents();
+		setTimerCapsule(getTimerCapsule() - 1);
 		notifierObservers("taketurn");
 	}
 
@@ -115,13 +116,14 @@ public class PacmanGame extends Game {
 			if(_maze.isFood(agent.getPosition().getX(), agent.getPosition().getY())) _maze.setFood(agent.getPosition().getX(), agent.getPosition().getY(), false);
 			if(_maze.isCapsule(agent.getPosition().getX(), agent.getPosition().getY())) {
 				_maze.setCapsule(agent.getPosition().getX(), agent.getPosition().getY(), false);
-				setTimerCapsule();
+				setTimerCapsule(20);
 			}
 		}
 	}
 	
 	//Teste si un pacman (ou un fantôme si une capsule a été récupérée) a été mangé et le supprime de la liste des agents dans ce cas
 	public void killAgents() {
+		System.out.println(getTimerCapsule());
 		for(int i = 0; i < _agents.size() - 1; i++) {
 			for(int j = i+1; j < _agents.size(); j++) {
 				if(_agents.get(i).getPosition().getX() == _agents.get(j).getPosition().getX() && _agents.get(i).getPosition().getY() == _agents.get(j).getPosition().getY()) {
