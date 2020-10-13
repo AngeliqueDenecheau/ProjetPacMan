@@ -117,7 +117,7 @@ public class ViewCommand implements Observer{
 		_jframe.setContentPane(container);
 		_jframe.setVisible(true);
 		
-		if(_controleurGame.isInteractive()) {
+		if(_controleurGame.isInteractive() || _controleurGame.isMultijoueurs()) {
 			_runButton.setEnabled(false);
 			_slider.setEnabled(false);
 			_sliderTitle.setEnabled(false);
@@ -145,7 +145,7 @@ public class ViewCommand implements Observer{
 		case "start":
 			_nbrTours.setText("Tour : " + game.getTurn());
 			_restartButton.setEnabled(false);
-			if(_controleurGame.isInteractive()) break;
+			if(_controleurGame.isInteractive() || _controleurGame.isMultijoueurs()) break;
 			_runButton.setEnabled(true);
 			_stepButton.setEnabled(false);
 			_pauseButton.setEnabled(false);

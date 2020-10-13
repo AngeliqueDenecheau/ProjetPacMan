@@ -21,4 +21,16 @@ public class StrategieSimple extends Strategie {
 
 	@Override
 	protected void keyPressed(int code) {}
+
+	@Override
+	public Turn getTurn() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTurn(Turn turn) {
+		// TODO Auto-generated method stub
+		
+	}
 }

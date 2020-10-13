@@ -9,4 +9,6 @@ public interface InterfaceControleur {
 	public void setTime(double time);
 	public void keyPressed(int code);
 	public boolean isInteractive();
+	public boolean isMultijoueurs();
+	public boolean isGhostsScarred();
 }

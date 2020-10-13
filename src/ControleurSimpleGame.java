@@ -54,4 +54,16 @@ public class ControleurSimpleGame implements InterfaceControleur {
 	@Override
 	public boolean isInteractive() {return false;}
 
+	@Override
+	public boolean isMultijoueurs() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isGhostsScarred() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

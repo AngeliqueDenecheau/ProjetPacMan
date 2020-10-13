@@ -55,7 +55,6 @@ public class PacmanGame extends Game {
 			moveAgent(agent, action);
 		}
 		killAgents();
-		setTimerCapsule(getTimerCapsule() - 1);
 		notifierObservers("taketurn");
 	}
 
@@ -116,7 +115,8 @@ public class PacmanGame extends Game {
 			if(_maze.isFood(agent.getPosition().getX(), agent.getPosition().getY())) _maze.setFood(agent.getPosition().getX(), agent.getPosition().getY(), false);
 			if(_maze.isCapsule(agent.getPosition().getX(), agent.getPosition().getY())) {
 				_maze.setCapsule(agent.getPosition().getX(), agent.getPosition().getY(), false);
-				setTimerCapsule(20);
+				setTimerCapsule(21);
+				notifierObservers("colorghosts");
 			}
 		}
 	}

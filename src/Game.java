@@ -46,14 +46,19 @@ public abstract class Game implements Runnable, Observable {
 		_isRunning = false;
 		_over = false;
 		_timerCapsule = 0;
+		_strategy.setTurn(Turn.PACMAN);
 		initializeGame();
 	}
 	
 	//Effectue un seul tour de jeu
 	public void step() {
 		if(_over) return;
-		System.out.println("Tour " + _turn);
-		_turn++;
+		if(!(_strategy instanceof StrategieMultijoueurs) || _strategy.getTurn() == Turn.PACMAN) {
+			System.out.println("Tour " + _turn);
+			_turn++;
+			setTimerCapsule(getTimerCapsule() - 1);
+			if(getTimerCapsule() == 0) notifierObservers("colorghosts");
+		}
 		takeTurn();
 		if(!gameContinue()) {
 			_isRunning = false;
@@ -105,7 +110,9 @@ public abstract class Game implements Runnable, Observable {
 	
 	public void keyPressed(int code) {
 		_isRunning = true;
-		_strategy.keyPressed(code);
-		step();
+		if((_strategy instanceof StrategieInteractive && (code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_LEFT)) || (_strategy instanceof StrategieMultijoueurs && ((_strategy.getTurn() == Turn.PACMAN && (code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_LEFT)) || (_strategy.getTurn() == Turn.GHOST && (code == KeyEvent.VK_Z || code == KeyEvent.VK_S || code == KeyEvent.VK_D || code == KeyEvent.VK_Q))))){
+			_strategy.keyPressed(code);
+			step();			
+		}
 	}
 }

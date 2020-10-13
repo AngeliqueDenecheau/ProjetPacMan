@@ -16,26 +16,38 @@ public class StrategieInteractive extends Strategie {
 	@Override
 	protected void keyPressed(int code) {
 		switch(code) {
-		case KeyEvent.VK_UP:
-			System.out.println("Up");
-			_action = 0;
-			break;
-		case KeyEvent.VK_DOWN:
-			System.out.println("Down");
-			_action = 1;
-			break;
-		case KeyEvent.VK_RIGHT:
-			System.out.println("Right");
-			_action = 2;
-			break;
-		case KeyEvent.VK_LEFT:
-			System.out.println("Left");
-			_action = 3;
-			break;
-		default:
-			System.out.println("Default");
-			_action = 4;
-			break;
+			case KeyEvent.VK_UP:
+				System.out.println("Up");
+				_action = 0;
+				break;
+			case KeyEvent.VK_DOWN:
+				System.out.println("Down");
+				_action = 1;
+				break;
+			case KeyEvent.VK_RIGHT:
+				System.out.println("Right");
+				_action = 2;
+				break;
+			case KeyEvent.VK_LEFT:
+				System.out.println("Left");
+				_action = 3;
+				break;
+			default:
+				System.out.println("Default");
+				_action = 4;
+				break;
+		}
 	}
+
+	@Override
+	public Turn getTurn() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTurn(Turn turn) {
+		// TODO Auto-generated method stub
+		
 	}
 }

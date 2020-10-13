@@ -11,4 +11,7 @@ public abstract class Strategie {
 	}
 
 	protected abstract void keyPressed(int code);
+	
+	public abstract Turn getTurn();
+	public abstract void setTurn(Turn turn);
 }

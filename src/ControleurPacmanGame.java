@@ -17,6 +17,10 @@ public class ControleurPacmanGame implements InterfaceControleur {
 	public boolean isInteractive() {
 		return _pacmangame.getStrategy() instanceof StrategieInteractive;
 	}
+	
+	public boolean isMultijoueurs() {
+		return _pacmangame.getStrategy() instanceof StrategieMultijoueurs;
+	}
 
 	@Override
 	//Redémarre la partie
@@ -57,7 +61,10 @@ public class ControleurPacmanGame implements InterfaceControleur {
 	public void keyPressed(int code) {
 		_pacmangame.keyPressed(code);
 		_pacmangame.notifierObservers("keypressed");
-		
+	}
+	
+	public boolean isGhostsScarred() {
+		return _pacmangame.getTimerCapsule() > 0;
 	}
 
 }

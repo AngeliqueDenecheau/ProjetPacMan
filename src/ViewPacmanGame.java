@@ -33,7 +33,7 @@ public class ViewPacmanGame implements Observer {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
 		_jframe.setLocation(1400, 0);
-		if(_controleurGame.isInteractive()) {
+		if(_controleurGame.isInteractive() || _controleurGame.isMultijoueurs()) {
 			_jframe.addKeyListener(new KeyListener() {
 				@Override
 				public void keyTyped(KeyEvent e) {}
@@ -42,7 +42,7 @@ public class ViewPacmanGame implements Observer {
 				
 				@Override
 				public void keyPressed(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT)	_controleurGame.keyPressed(e.getKeyCode());
+					_controleurGame.keyPressed(e.getKeyCode());
 				}
 			});
 		}
@@ -64,6 +64,9 @@ public class ViewPacmanGame implements Observer {
 		switch(modification) {
 			case "start":
 				_jframe.dispose();
+				break;
+			case "colorghosts":
+				_labyrinthe.setGhostsScarred(_controleurGame.isGhostsScarred());
 				break;
 			case "taketurn":
 				_tourCourant.setText("Tour : " + game.getTurn());
