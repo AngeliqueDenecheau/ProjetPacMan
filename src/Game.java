@@ -31,7 +31,7 @@ public abstract class Game implements Runnable, Observable {
 	public void setTime(long time) {_time = time;}
 	public Strategie getStrategy() {return _strategy;}
 	public int getTimerCapsule() {return _timerCapsule;}
-	public void setTimerCapsule() {_timerCapsule = 20;}
+	public void setTimerCapsule(int timer) {_timerCapsule = timer;}
 	
 	//Méthode abstraites
 	public abstract ArrayList<Agent> getAgents();
