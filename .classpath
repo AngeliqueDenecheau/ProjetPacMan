@@ -6,7 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/home/etudiant/Téléchargements/flatlaf-0.43.jar"/>
-	<classpathentry kind="lib" path="/home/etudiant/Téléchargements/flatlaf-intellij-themes-0.43.jar"/>
+	<classpathentry kind="lib" path="/home/etudiant/Documents/eclipse-workspace/Projet/flatlaf-0.43.jar"/>
+	<classpathentry kind="lib" path="/home/etudiant/Documents/eclipse-workspace/Projet/flatlaf-intellij-themes-0.43.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
