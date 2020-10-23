@@ -1,5 +1,3 @@
-import java.awt.event.KeyEvent;
-
 public interface InterfaceControleur {
 
 	public void start();	

@@ -1,4 +1,3 @@
-
 public interface Observable {
 	
 	public void ajouterObserver(Observer observateur);

@@ -1,16 +1,8 @@
-//Classe affichant le panneau de commandes de la partie
-
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
+import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Panel;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,17 +24,15 @@ public class ViewCommand implements Observer{
 	private JSlider _slider;
 	private JLabel _nbrTours;
 	private InterfaceControleur _controleurGame;
+	private static String _font = "Roboto";
 	
 	public ViewCommand(Observable observable, InterfaceControleur controleur) {
 		observable.ajouterObserver(this);
 		_controleurGame = controleur;
 		
 		_jframe = new JFrame();
-		_jframe.setTitle("Game");
+		_jframe.setTitle("Commandes");
 		_jframe.setSize(new Dimension(1400, 700));
-		Dimension windowSize = _jframe.getSize();
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		Point centerPoint = ge.getCenterPoint();
 		_jframe.setLocation(0, 0);
 		
 		JPanel container = new JPanel();
@@ -95,6 +85,7 @@ public class ViewCommand implements Observer{
 		JPanel slider_container = new JPanel();
 		slider_container.setLayout(new GridLayout(2, 1));
 		_sliderTitle = new JLabel("Nombre de tours par seconde", SwingConstants.CENTER);
+		_sliderTitle.setFont(new Font(_font, Font.PLAIN, 16));
 		slider_container.add(_sliderTitle);
 		_slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
 		_slider.setMajorTickSpacing(1);
@@ -109,6 +100,7 @@ public class ViewCommand implements Observer{
 		});
 		bottom_container.add(slider_container);
 		_nbrTours = new JLabel("Tour : 0", SwingConstants.CENTER);
+		_nbrTours.setFont(new Font(_font, Font.PLAIN, 16));
 		bottom_container.add(_nbrTours);
 		
 		container.add(top_container);
@@ -121,7 +113,7 @@ public class ViewCommand implements Observer{
 			_runButton.setEnabled(false);
 			_slider.setEnabled(false);
 			_sliderTitle.setEnabled(false);
-			_nbrTours.setText("Appuiez sur les touches flêchées pour bouger le Pacman.");
+			_nbrTours.setText((_controleurGame.isInteractive()) ? "Appuiez sur les touches flêchées pour bouger le Pacman." : "Pacman : touches flêchées et Fantôme : touches Z,Q,S,D");
 		}
 		
 		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,13 +152,16 @@ public class ViewCommand implements Observer{
 			_nbrTours.setText("Tour : " + game.getTurn());
 			break;
 		case "ghostwin":
+			_nbrTours.setText("Victoire des Fantômes !");
+			finPartie();
+			break;
 		case "pacmanwin":
+			_nbrTours.setText("Victoire des Pacmans !");
+			finPartie();
+			break;
 		case "toursecoules":
-			System.out.println("fin");
-			_restartButton.setEnabled(true);
-			_runButton.setEnabled(false);
-			_stepButton.setEnabled(false);
-			_pauseButton.setEnabled(false);
+			_nbrTours.setText("Nombre de tours écoulés !");
+			finPartie();
 			break;
 		case "keypressed":
 			_restartButton.setEnabled(true);
@@ -177,5 +172,12 @@ public class ViewCommand implements Observer{
 		default:
 			break;
 		}
+	}
+	
+	public void finPartie() {
+		_restartButton.setEnabled(true);
+		_runButton.setEnabled(false);
+		_stepButton.setEnabled(false);
+		_pauseButton.setEnabled(false);
 	}
 }

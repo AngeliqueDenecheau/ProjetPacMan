@@ -1,10 +1,7 @@
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-
-
 
 public class PanelPacmanGame extends JPanel {
 

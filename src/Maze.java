@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -175,7 +174,6 @@ public class Maze implements Serializable, Cloneable {
 	public void setCapsule(int x, int y, boolean b) {
 		capsules[x][y] = b;
 	}
-	
 
 	/**
 	 * Renvoie le nombre de pacmans
