@@ -25,8 +25,6 @@ public class Game implements Runnable, Observable {
 		_mazeFilename = mazeFilename;
 		_strategyPacman = strategiePacman;
 		_strategyGhost = strategieGhost;
-		_strategyPacman.setGame(this);
-		_strategyGhost.setGame(this);
 		_observateurs = new ArrayList<Observer>();
 		init();
 	}
@@ -67,6 +65,8 @@ public class Game implements Runnable, Observable {
 			_agents.add(newPacman);
 		}
 		if(_strategyPacman instanceof StrategieMultijoueurs) ((StrategieMultijoueurs) _strategyPacman).setPacmanTurn(true);
+		_strategyPacman.setGame(this);
+		_strategyGhost.setGame(this);
 	}
 	
 	public void run() {

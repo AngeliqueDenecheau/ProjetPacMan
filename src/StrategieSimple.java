@@ -60,7 +60,7 @@ public class StrategieSimple extends Strategie {
 	public AgentAction attack(Agent agent, Maze maze) {
 		PositionAgent pacManPos = getPacManPos();
 		AgentAction action;
-
+		
 		
 		if(pacManPos.getX() > agent.getPosition().getX()) { //pacMan is east of agent
 			action = new AgentAction(2); //go east

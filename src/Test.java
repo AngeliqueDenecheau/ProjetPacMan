@@ -149,7 +149,7 @@ public class Test {
 		JLabel titreStrategiePacman = new JLabel("Stratégie Pacman : ", SwingConstants.CENTER);
 		titreStrategiePacman.setFont(new Font(_font, Font.PLAIN, 16));
 		strategiesPacmanContainer.add(titreStrategiePacman);
-		String[] strategies = (nbrJoueurs == 2) ? new String[] {"Multijoueurs"} : new String[] {"Aléatoire", "Simple"};
+		String[] strategies = (nbrJoueurs == 2) ? new String[] {"Multijoueurs"} : new String[] {"Aléatoire", "Simple", "A*"};
 		JComboBox<String> choixStrategiesPacmans = new JComboBox<String>(strategies);
 		choixStrategiesPacmans.setFont(new Font(_font, Font.PLAIN, 16));
 		strategiesPacmanContainer.add(choixStrategiesPacmans);
@@ -187,7 +187,7 @@ public class Test {
 		
 		if(nbrJoueurs == 1) {
 			DefaultComboBoxModel<String> interractive = new DefaultComboBoxModel<String>(new String[] {"Interactive"});
-			DefaultComboBoxModel<String> autre = new DefaultComboBoxModel<String>(new String[] {"Aléatoire", "Simple"});
+			DefaultComboBoxModel<String> autre = new DefaultComboBoxModel<String>(new String[] {"Aléatoire", "Simple", "A*"});
 			choixStrategiesPacmans.setModel(interractive);
 			choixStrategiesPacmans.setEnabled(false);
 			strategies_container.setLayout(new GridLayout(4, 1));
@@ -294,6 +294,8 @@ public class Test {
 						case "Interactive":
 							_strategieGhosts = new StrategieInteractive();
 							break;
+						case "A*":
+							_strategieGhosts = new StrategieA_etoile();
 					}
 				}
 				String mazeName = (mazeFileField.getText().replaceAll("[\\n\\t\\s+]", "").length() == 0) ? "test.lay" : mazeFileField.getText();

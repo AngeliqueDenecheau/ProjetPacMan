@@ -1,0 +1,207 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.lang.Math.*;
+
+
+public class Graph {
+	
+	public class Node {
+		public int numNode;
+		public ArrayList<Integer> adjacent;
+	}
+	public class Edge {
+		public int From;
+		public int To;
+	}
+	
+	private ArrayList<Node> nodes; //list d'adjacence
+	
+	
+	//make graph from maze
+	public Graph(Game game) {
+		
+		this.nodes = new ArrayList<Node>();
+		
+		Maze maze = game.getMaze();
+		int height = maze.getSizeY();
+		int width = maze.getSizeX();
+		
+		
+		for(int j = 0; j < height; j++) {
+			for(int i = 0; i < width; i++) {
+				//System.out.println(i + ", " + j + " : " + (j*width + i) + " , isWall: " + maze.isWall(i, j));
+				Node temp = new Node();
+				temp.numNode = (j*width + i);
+				temp.adjacent = new ArrayList<Integer>();
+				
+				if(!maze.isWall(i, j)) {
+					//check what directions are available
+					if((i-1) > 0 && (i-1) < width && !maze.isWall((i-1), j)) { //east
+						temp.adjacent.add(j*width + (i-1));
+					}
+					
+					if((i+1) > 0 && (i+1) < width && !maze.isWall((i+1), j)) { //west
+						temp.adjacent.add(j*width + (i+1));
+					}
+					
+					if((j-1) > 0 && (j-1) < height && !maze.isWall(i, (j-1))) { //south
+						temp.adjacent.add((j-1)*width + i);
+					}
+					
+					if((j+1) > 0 && (j+1) < height && !maze.isWall(i, (j+1))) { //north
+						temp.adjacent.add((j+1)*width + i);
+					
+					}
+				}
+				
+				this.nodes.add(temp);
+			}
+		}
+		//display();
+	}
+	
+	
+	
+	
+	//distance euclidienne entre start et goal
+	public double heuristic(int start, int goal, Maze maze) { 
+		double startX = start % maze.getSizeX();
+		double startY = start / maze.getSizeX();
+		
+		double goalX = goal % maze.getSizeX();
+		double goalY = goal / maze.getSizeX();
+		
+		double distance = Math.sqrt(Math.pow(startX-goalX, 2d) + Math.pow(startY-goalY, 2d));
+		return distance;
+	}
+	
+	//returns index of min value in array
+	public int minScore(ArrayList<Double> array, ArrayList<Integer> indexes) {
+		int minIndex = indexes.get(0);
+		for(int i = 1; i < indexes.size(); i++) {
+			if(array.get(indexes.get(i)) < array.get(minIndex)) {
+				minIndex = indexes.get(i);
+			}
+		}
+		return minIndex;
+	}
+	
+	
+	public boolean isInKeys(ArrayList<Edge> cameFrom, int current) {
+		for(Edge e : cameFrom){
+			if(e.To == current) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public int getForKey(ArrayList<Edge> cameFrom, int key) {
+		for(Edge e : cameFrom){
+			if(e.To == key) {
+				return e.From;
+			}
+		}
+		return 0;
+	}
+	
+	
+	public int reconstruct_path(ArrayList<Edge> cameFrom, int current) {
+		ArrayList <Integer> path = new ArrayList<Integer>();
+		path.add(current);
+		
+		while(isInKeys(cameFrom, current)) {
+			current = getForKey(cameFrom, current);
+			path.add(current);
+		}
+		//System.out.println("path: " + path);
+		
+		return path.get(path.size()-2); //get next move
+		
+	}
+	
+	public int A_Star(int start, int goal, Maze maze) {
+		ArrayList<Integer> openSet = new ArrayList<Integer>();
+		openSet.add(start);
+		
+		// For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
+		ArrayList<Edge> cameFrom = new ArrayList<Edge>();
+		
+		// For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
+		ArrayList<Double> gScore = new ArrayList<Double>();
+		for(int i = 0; i < maze.getSizeX()*maze.getSizeY(); i++) {
+			gScore.add(Double.POSITIVE_INFINITY);
+		}
+		gScore.set(start, 0d);
+		
+		
+		// For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to how short a path from start to finish can be if it goes through n.
+		ArrayList<Double> fScore = new ArrayList<Double>();
+		for(int i = 0; i < maze.getSizeX()*maze.getSizeY(); i++) {
+			fScore.add(Double.POSITIVE_INFINITY);
+		}
+		fScore.set(start, heuristic(start, goal, maze));
+		
+		while(! openSet.isEmpty()) {
+			//System.out.println("Goal: " + goal);
+			int current = minScore(fScore, openSet);
+			if(current == goal) {
+				return reconstruct_path(cameFrom, current);
+			}
+			
+			
+			//System.out.println("OpenSet: " + openSet);
+			//System.out.println("current: " + current);
+			//System.out.println("fscore: " + fScore);
+			
+			openSet.remove(openSet.indexOf(current));
+			ArrayList<Integer> neighbors = nodes.get(current).adjacent;
+			for(int a : neighbors) {
+				//System.out.println("neighbor: "+ a);
+				double tentative_gScore = gScore.get(current) + 1;//on suppose que les vertex ont un poids de 1
+				if(tentative_gScore < gScore.get(a)) {// This path to neighbor is better than any previous one. Record it!
+					Edge e = new Edge();
+					e.From = current;
+					e.To = a;
+					cameFrom.add(e);
+					gScore.set(a, tentative_gScore);
+					fScore.set(a, tentative_gScore + heuristic(a, goal, maze));
+					if(! openSet.contains(a)) {//add neighbor if not already in openSet
+						openSet.add(a);
+						//System.out.println("neighbor: "+ a + " added to openset");
+					}
+				}
+			}
+		}
+		//no path 
+		return -1;
+	}
+	
+	public void display() {
+		String temp;
+		for(int i = 0; i < this.nodes.size(); i++) {
+			temp = this.nodes.get(i).numNode + " -> ";
+			for(int a = 0; a < this.nodes.get(i).adjacent.size(); a++) {
+				temp += this.nodes.get(i).adjacent.get(a) + ", ";
+				
+			}
+			System.out.println(temp);
+			
+		}
+	}
+	
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
