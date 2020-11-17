@@ -1,6 +1,8 @@
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Icon;
@@ -32,90 +34,92 @@ public class ViewCommand implements Observer{
 		
 		_jframe = new JFrame();
 		_jframe.setTitle("Commandes");
-		_jframe.setSize(new Dimension(1400, 700));
-		_jframe.setLocation(0, 0);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		
 		JPanel container = new JPanel();
-		container.setLayout(new GridLayout(2, 1));
-		
-		JPanel top_container = new JPanel();
-		top_container.setLayout(new GridLayout(1, 4));
 		Icon restartIcon = new ImageIcon("./icons/icon_restart.png");
 		_restartButton = new JButton(restartIcon);
 		_restartButton.setEnabled(false);
-		top_container.add(_restartButton);
-		Icon runIcon = new ImageIcon("./icons/icon_run.png");
-		_runButton = new JButton(runIcon);
-		top_container.add(_runButton);
-		Icon stepIcon = new ImageIcon("./icons/icon_step.png");
-		_stepButton = new JButton(stepIcon);
-		_stepButton.setEnabled(false);
-		top_container.add(_stepButton);
-		Icon pauseIcon = new ImageIcon("./icons/icon_pause.png");
-		_pauseButton = new JButton(pauseIcon);
-		_pauseButton.setEnabled(false);
-		top_container.add(_pauseButton);
 		_restartButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_controleurGame.start();
 			}
 		});
-		_runButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				_controleurGame.run();
-			}
-		});
-		_stepButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				_controleurGame.step();
-			}
-		});
-		_pauseButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				_controleurGame.pause();
-			}
-		});
-		
-		JPanel bottom_container = new JPanel();
-		bottom_container.setLayout(new GridLayout(1, 2));
-		JPanel slider_container = new JPanel();
-		slider_container.setLayout(new GridLayout(2, 1));
-		_sliderTitle = new JLabel("Nombre de tours par seconde", SwingConstants.CENTER);
-		_sliderTitle.setFont(new Font(_font, Font.PLAIN, 16));
-		slider_container.add(_sliderTitle);
-		_slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
-		_slider.setMajorTickSpacing(1);
-		_slider.setPaintTicks(true);
-		_slider.setPaintLabels(true);
-		slider_container.add(_slider);
-		_slider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				_controleurGame.setTime(_slider.getValue());
-			}
-		});
-		bottom_container.add(slider_container);
 		_nbrTours = new JLabel("Tour : 0", SwingConstants.CENTER);
 		_nbrTours.setFont(new Font(_font, Font.PLAIN, 16));
-		bottom_container.add(_nbrTours);
-		
-		container.add(top_container);
-		container.add(bottom_container);
-		
-		_jframe.setContentPane(container);
-		_jframe.setVisible(true);
 		
 		if(_controleurGame.isInteractive() || _controleurGame.isMultijoueurs()) {
-			_runButton.setEnabled(false);
-			_slider.setEnabled(false);
-			_sliderTitle.setEnabled(false);
+			_jframe.setSize(new Dimension(900, 200));
+			container.setLayout(new GridLayout(1, 2));
+			container.add(_restartButton);
+			container.add(_nbrTours);
 			_nbrTours.setText((_controleurGame.isInteractive()) ? "Appuiez sur les touches flêchées pour bouger le Pacman." : "Pacman : touches flêchées et Fantôme : touches Z,Q,S,D");
+		}else {
+			_jframe.setSize(new Dimension(900, 350));
+			container.setLayout(new GridLayout(2, 1));
+			
+			JPanel top_container = new JPanel();
+			top_container.setLayout(new GridLayout(1, 4));
+			top_container.add(_restartButton);
+			Icon runIcon = new ImageIcon("./icons/icon_run.png");
+			_runButton = new JButton(runIcon);
+			top_container.add(_runButton);
+			Icon stepIcon = new ImageIcon("./icons/icon_step.png");
+			_stepButton = new JButton(stepIcon);
+			_stepButton.setEnabled(false);
+			top_container.add(_stepButton);
+			Icon pauseIcon = new ImageIcon("./icons/icon_pause.png");
+			_pauseButton = new JButton(pauseIcon);
+			_pauseButton.setEnabled(false);
+			top_container.add(_pauseButton);
+			_runButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					_controleurGame.run();
+				}
+			});
+			_stepButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					_controleurGame.step();
+				}
+			});
+			_pauseButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					_controleurGame.pause();
+				}
+			});
+			
+			JPanel bottom_container = new JPanel();
+			bottom_container.setLayout(new GridLayout(1, 2));
+			JPanel slider_container = new JPanel();
+			slider_container.setLayout(new GridLayout(2, 1));
+			_sliderTitle = new JLabel("Nombre de tours par seconde", SwingConstants.CENTER);
+			_sliderTitle.setFont(new Font(_font, Font.PLAIN, 16));
+			slider_container.add(_sliderTitle);
+			_slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
+			_slider.setMajorTickSpacing(1);
+			_slider.setPaintTicks(true);
+			_slider.setPaintLabels(true);
+			slider_container.add(_slider);
+			_slider.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					_controleurGame.setTime(_slider.getValue());
+				}
+			});
+			bottom_container.add(slider_container);
+			bottom_container.add(_nbrTours);
+			
+			container.add(top_container);
+			container.add(bottom_container);
 		}
 		
+		_jframe.setLocation(0, screenSize.height - _jframe.getHeight() - 25);
+		_jframe.setContentPane(container);
+		_jframe.setVisible(true);		
 		_jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
@@ -165,9 +169,6 @@ public class ViewCommand implements Observer{
 			break;
 		case "keypressed":
 			_restartButton.setEnabled(true);
-			_runButton.setEnabled(false);
-			_stepButton.setEnabled(false);
-			_pauseButton.setEnabled(false);
 			break;
 		default:
 			break;
@@ -176,8 +177,10 @@ public class ViewCommand implements Observer{
 	
 	public void finPartie() {
 		_restartButton.setEnabled(true);
-		_runButton.setEnabled(false);
-		_stepButton.setEnabled(false);
-		_pauseButton.setEnabled(false);
+		if(!_controleurGame.isInteractive() && !_controleurGame.isMultijoueurs()) {
+			_runButton.setEnabled(false);
+			_stepButton.setEnabled(false);
+			_pauseButton.setEnabled(false);
+		}
 	}
 }

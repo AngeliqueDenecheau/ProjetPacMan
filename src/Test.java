@@ -17,9 +17,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -30,6 +35,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 public class Test {
 	
@@ -49,6 +55,7 @@ public class Test {
 		_jframeMaze.setTitle("Erreur");
 		try {
 			UIManager.setLookAndFeel(_lookandfeel);
+			//UIManager.setLookAndFeel(new NimbusLookAndFeel());
 		} catch (Exception e) {
 		}
 		choosePlayer();
@@ -67,7 +74,7 @@ public class Test {
 		container.setLayout(new BorderLayout());
 		
 		JLabel titre = new JLabel("Choisissez le nombre de joueurs :", SwingConstants.CENTER);
-		titre.setFont(new Font(_font, Font.BOLD, 20));
+		//titre.setFont(new Font(_font, Font.BOLD, 20));
 		titre.setPreferredSize(new Dimension(400, 50));
 		container.add(titre, BorderLayout.PAGE_START);
 		
@@ -76,19 +83,19 @@ public class Test {
 		button_container.add(Box.createRigidArea(new Dimension(0, 15)));
 		
 		JButton zeroPlayer = new JButton("0 Joueur");
-		zeroPlayer.setFont(new Font(_font, Font.PLAIN, 16));
+		//zeroPlayer.setFont(new Font(_font, Font.PLAIN, 16));
 		zeroPlayer.setMargin(new Insets(10, 30, 10, 30));
 		zeroPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		button_container.add(zeroPlayer);
 		button_container.add(Box.createRigidArea(new Dimension(0, 15)));
 		JButton onePlayer = new JButton("1 Joueur");
-		onePlayer.setFont(new Font(_font, Font.PLAIN, 16));
+		//onePlayer.setFont(new Font(_font, Font.PLAIN, 16));
 		onePlayer.setMargin(new Insets(10, 30, 10, 30));
 		onePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 		button_container.add(onePlayer);
 		button_container.add(Box.createRigidArea(new Dimension(0, 15)));
 		JButton twoPlayers = new JButton("2 Joueurs");
-		twoPlayers.setFont(new Font(_font, Font.PLAIN, 16));
+		//twoPlayers.setFont(new Font(_font, Font.PLAIN, 16));
 		twoPlayers.setMargin(new Insets(10, 25, 10, 25));
 		twoPlayers.setAlignmentX(Component.CENTER_ALIGNMENT);
 		button_container.add(twoPlayers);
@@ -135,7 +142,7 @@ public class Test {
 		container.setLayout(new BorderLayout());
 		
 		JLabel titre = new JLabel("Choisissez les stratégies pour les Pacmans et les Fantômes :", SwingConstants.CENTER);
-		titre.setFont(new Font(_font, Font.BOLD, 16));
+		//titre.setFont(new Font(_font, Font.BOLD, 16));
 		titre.setPreferredSize(new Dimension(400, 50));
 		container.add(titre, BorderLayout.PAGE_START);
 		
@@ -147,47 +154,43 @@ public class Test {
 		strategiesGhostContainer.setLayout(new GridBagLayout());
 		
 		JLabel titreStrategiePacman = new JLabel("Stratégie Pacman : ", SwingConstants.CENTER);
-		titreStrategiePacman.setFont(new Font(_font, Font.PLAIN, 16));
+		//titreStrategiePacman.setFont(new Font(_font, Font.PLAIN, 16));
 		strategiesPacmanContainer.add(titreStrategiePacman);
-		String[] strategies = (nbrJoueurs == 2) ? new String[] {"Multijoueurs"} : new String[] {"Aléatoire", "Simple", "A*"};
-		JComboBox<String> choixStrategiesPacmans = new JComboBox<String>(strategies);
-		choixStrategiesPacmans.setFont(new Font(_font, Font.PLAIN, 16));
+		String[] strategiesPacman = (nbrJoueurs == 2) ? new String[] {"Multijoueurs"} : new String[] {"Aléatoire", "Simple"};
+		JComboBox<String> choixStrategiesPacmans = new JComboBox<String>(strategiesPacman);
+		//choixStrategiesPacmans.setFont(new Font(_font, Font.PLAIN, 16));
 		strategiesPacmanContainer.add(choixStrategiesPacmans);
 		
 		JLabel titreStrategieGhost = new JLabel("Stratégie Fantôme : ", SwingConstants.CENTER);
-		titreStrategieGhost.setFont(new Font(_font, Font.PLAIN, 16));
+		//titreStrategieGhost.setFont(new Font(_font, Font.PLAIN, 16));
 		strategiesGhostContainer.add(titreStrategieGhost);
-		JComboBox<String> choixStrategiesGhosts = new JComboBox<String>(strategies);
-		choixStrategiesGhosts.setFont(new Font(_font, Font.PLAIN, 16));
+		String[] strategiesGhost = (nbrJoueurs == 2) ? new String[] {"Multijoueurs"} : new String[] {"Aléatoire", "Simple", "A*"};
+		JComboBox<String> choixStrategiesGhosts = new JComboBox<String>(strategiesGhost);
+		//choixStrategiesGhosts.setFont(new Font(_font, Font.PLAIN, 16));
 		strategiesGhostContainer.add(choixStrategiesGhosts);
 		
 		JPanel mazeContainer = new JPanel();
 		mazeContainer.setLayout(new GridBagLayout());
 		
 		JLabel titreMazeFile = new JLabel("Nom du fichier labyrinthe : ", SwingConstants.CENTER);
-		titreMazeFile.setFont(new Font(_font, Font.PLAIN, 16));
+		//titreMazeFile.setFont(new Font(_font, Font.PLAIN, 16));
 		mazeContainer.add(titreMazeFile);
 		
-		JTextField mazeFileField = new JTextField("test.lay");
-		mazeFileField.setFont(new Font(_font, Font.PLAIN, 16));
-		mazeFileField.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				System.out.println(mazeFileField.getText());
-				if(mazeFileField.getText().length() == 0) mazeFileField.setText("test.lay");
-			}
-			@Override
-			public void focusGained(FocusEvent e) {
-				System.out.println(mazeFileField.getText());
-				mazeFileField.setText("");
-			}
-		});
+		List<String> mazeFilesName;
+        File f = new File("./layouts");
+        mazeFilesName = Arrays.asList(f.list());
+        for(int i = 0; i < mazeFilesName.size(); i++) {
+        	mazeFilesName.set(i, mazeFilesName.get(i).substring(0, mazeFilesName.get(i).length() - 4));
+        }
+        mazeFilesName.sort(Comparator.comparing(String::toString));
+		JComboBox<String> mazeFileField = new JComboBox(mazeFilesName.toArray());
+		mazeFileField.setSelectedIndex((mazeFilesName.indexOf("capsuleClassic") != -1) ? mazeFilesName.indexOf("capsuleClassic") : 0);
+		//mazeFileField.setFont(new Font(_font, Font.PLAIN, 16));
 		mazeFileField.setPreferredSize(new Dimension(250, 25));
 		mazeContainer.add(mazeFileField);
 		
 		if(nbrJoueurs == 1) {
 			DefaultComboBoxModel<String> interractive = new DefaultComboBoxModel<String>(new String[] {"Interactive"});
-			DefaultComboBoxModel<String> autre = new DefaultComboBoxModel<String>(new String[] {"Aléatoire", "Simple", "A*"});
 			choixStrategiesPacmans.setModel(interractive);
 			choixStrategiesPacmans.setEnabled(false);
 			strategies_container.setLayout(new GridLayout(4, 1));
@@ -197,9 +200,9 @@ public class Test {
 			campContainer.add(titreCamp);
 			ButtonGroup buttonGroup = new ButtonGroup();
 		    JRadioButton pacman = new JRadioButton("Pacman");
-		    pacman.setFont(new Font(_font, Font.PLAIN, 16));
+		    //pacman.setFont(new Font(_font, Font.PLAIN, 16));
 		    JRadioButton ghost = new JRadioButton("Fantôme");
-		    ghost.setFont(new Font(_font, Font.PLAIN, 16));
+		    //ghost.setFont(new Font(_font, Font.PLAIN, 16));
 		    pacman.setSelected( true );
 	        campContainer.add(pacman);
 	        campContainer.add(ghost);
@@ -211,7 +214,7 @@ public class Test {
 					if(e.getSource() == pacman) {
 						choixStrategiesPacmans.setModel(interractive);
 						choixStrategiesPacmans.setEnabled(false);
-						choixStrategiesGhosts.setModel(autre);
+						choixStrategiesGhosts.setModel(new DefaultComboBoxModel<String>(new String[] {"Aléatoire", "Simple", "A*"}));
 						choixStrategiesGhosts.setEnabled(true);
 					}
 				}
@@ -222,7 +225,7 @@ public class Test {
 					if(e.getSource() == ghost) {
 						choixStrategiesGhosts.setModel(interractive);
 						choixStrategiesGhosts.setEnabled(false);
-						choixStrategiesPacmans.setModel(autre);
+						choixStrategiesPacmans.setModel(new DefaultComboBoxModel<String>(new String[] {"Aléatoire", "Simple"}));
 						choixStrategiesPacmans.setEnabled(true);
 					}
 				}
@@ -247,12 +250,12 @@ public class Test {
 		
 		button_container.add(Box.createHorizontalGlue());
 		JButton retour = new JButton("Retour");
-		retour.setFont(new Font(_font, Font.PLAIN, 16));
+		//retour.setFont(new Font(_font, Font.PLAIN, 16));
 		retour.setMargin(new Insets(10, 30, 10, 30));
 		button_container.add(retour);
 		button_container.add(Box.createRigidArea(new Dimension(25, 0)));
 		JButton valider = new JButton("Valider");
-		valider.setFont(new Font(_font, Font.PLAIN, 16));
+		//valider.setFont(new Font(_font, Font.PLAIN, 16));
 		valider.setMargin(new Insets(10, 30, 10, 30));
 		button_container.add(valider);
 		button_container.add(Box.createHorizontalGlue());
@@ -296,10 +299,12 @@ public class Test {
 							break;
 						case "A*":
 							_strategieGhosts = new StrategieA_etoile();
+							break;
 					}
 				}
-				String mazeName = (mazeFileField.getText().replaceAll("[\\n\\t\\s+]", "").length() == 0) ? "test.lay" : mazeFileField.getText();
-				if(!mazeName.endsWith(".lay")) mazeName = mazeName + ".lay";
+				System.out.println(mazeFileField.getSelectedItem());
+				System.out.println(mazeFileField.getSelectedItem().toString());
+				String mazeName = mazeFileField.getSelectedItem().toString() + ".lay";
 				
 				File maze = new File("./layouts/" + mazeName);
 				if(!maze.exists()) { 
@@ -360,12 +365,12 @@ public class Test {
 		
 		container.add(Box.createVerticalGlue());
 		JLabel titre = new JLabel(erreur, SwingConstants.CENTER);
-		titre.setFont(new Font(_font, Font.PLAIN, 16));
+		//titre.setFont(new Font(_font, Font.PLAIN, 16));
 		titre.setAlignmentX(Component.CENTER_ALIGNMENT);
 		container.add(titre);
 		container.add(Box.createRigidArea(new Dimension(0, 25)));
 		JButton ok = new JButton("Ok");
-		ok.setFont(new Font(_font, Font.PLAIN, 16));
+		//ok.setFont(new Font(_font, Font.PLAIN, 16));
 		ok.setAlignmentX(Component.CENTER_ALIGNMENT);
 		ok.setMargin(new Insets(10, 30, 10, 30));
 		container.add(ok);

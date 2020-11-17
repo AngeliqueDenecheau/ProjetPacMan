@@ -1,5 +1,6 @@
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game implements Runnable, Observable {
 
@@ -65,6 +66,22 @@ public class Game implements Runnable, Observable {
 			_agents.add(newPacman);
 		}
 		if(_strategyPacman instanceof StrategieMultijoueurs) ((StrategieMultijoueurs) _strategyPacman).setPacmanTurn(true);
+		if(_strategyPacman instanceof StrategieInteractive) {
+			for(int i = 0; i < _agents.size(); i++) {
+				if(_agents.get(i) instanceof Pacman) {
+					Agent removed = _agents.remove(i);
+					_agents.add(0, removed);
+				}
+			}
+		};
+		if(_strategyGhost instanceof StrategieInteractive) {
+			for(int i = 0; i < _agents.size(); i++) {
+				if(_agents.get(i) instanceof Ghost) {
+					Agent removed = _agents.remove(i);
+					_agents.add(0, removed);
+				}
+			}
+		};
 		_strategyPacman.setGame(this);
 		_strategyGhost.setGame(this);
 	}
@@ -104,17 +121,34 @@ public class Game implements Runnable, Observable {
 	}
 	
 	public void takeTurn() {
-		for(Agent agent : _agents) {
-			AgentAction action = (agent instanceof Pacman) ? _strategyPacman.getAction(agent, _maze) : _strategyGhost.getAction(agent, _maze);
-			moveAgent(agent, action);
+		List<Agent> agents = new ArrayList<>();
+		for(int i = 0; i < _agents.size(); i++) {
+			agents.add(_agents.get(i));
 		}
-		killAgents();
+		while(!agents.isEmpty()) {
+			Agent currentAgent = agents.get(0);
+			AgentAction action = (currentAgent instanceof Pacman) ? _strategyPacman.getAction(currentAgent, _maze) : _strategyGhost.getAction(currentAgent, _maze);
+			moveAgent(currentAgent, action);
+			List<Agent> agentsKilled = killAgents();
+			for(Agent a : agentsKilled) {
+				if(agents.contains(a)) {
+					agents.remove(a);
+				}
+			}
+			if(agents.contains(currentAgent)) {
+				eatFood(currentAgent, action);
+				agents.remove(0);
+			}
+		}
 		if(_strategyPacman instanceof StrategieMultijoueurs && !stillGhosts()) ((StrategieMultijoueurs) _strategyPacman).setPacmanTurn(true);
 		notifierObservers("taketurn");
 	}
 	
 	public void moveAgent(Agent agent, AgentAction action) {
 		agent.setPosition(new PositionAgent(agent.getPosition().getX() + action.get_vx(), agent.getPosition().getY() + action.get_vy(), action.get_direction()));
+	}
+	
+	public void eatFood(Agent agent, AgentAction action) {
 		if(agent instanceof Pacman) {
 			if(_maze.isFood(agent.getPosition().getX(), agent.getPosition().getY())) _maze.setFood(agent.getPosition().getX(), agent.getPosition().getY(), false);
 			if(_maze.isCapsule(agent.getPosition().getX(), agent.getPosition().getY())) {
@@ -125,16 +159,19 @@ public class Game implements Runnable, Observable {
 		}
 	}
 	
-	public void killAgents() {
+	public List<Agent> killAgents() {
+		List<Agent> agentsKilled = new ArrayList<>();
 		for(int i = 0; i < _agents.size() - 1; i++) {
 			for(int j = i+1; j < _agents.size(); j++) {
 				if(_agents.get(i).getPosition().getX() == _agents.get(j).getPosition().getX() && _agents.get(i).getPosition().getY() == _agents.get(j).getPosition().getY()) {
 					if(_agents.get(i) instanceof Pacman && _agents.get(j) instanceof Ghost) {
+						agentsKilled.add(_agents.get((getTimerCapsule() > 0) ? j : i));
 						_agents.remove((getTimerCapsule() > 0) ? j : i);
 						i--;
 						break;
 					}
 					if(_agents.get(i) instanceof Ghost && _agents.get(j) instanceof Pacman) {
+						agentsKilled.add(_agents.get((getTimerCapsule() > 0) ? i : j));
 						_agents.remove((getTimerCapsule() > 0) ? i : j);
 						i--;
 						break;
@@ -142,6 +179,7 @@ public class Game implements Runnable, Observable {
 				}
 			}
 		}
+		return agentsKilled;
 	}
 	
 	public boolean stillGhosts() {

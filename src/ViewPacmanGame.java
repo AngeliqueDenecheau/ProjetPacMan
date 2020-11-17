@@ -17,7 +17,7 @@ public class ViewPacmanGame implements Observer {
 		_jframe = new JFrame();
 		_jframe.setTitle("Jeu");
 		_jframe.setSize(new Dimension(maze.getSizeX()*75, maze.getSizeY()*75));
-		_jframe.setLocation(1400, 0);
+		_jframe.setLocation(0, 0);
 		if(_controleurGame.isInteractive() || _controleurGame.isMultijoueurs()) {
 			_jframe.addKeyListener(new KeyListener() {
 				@Override

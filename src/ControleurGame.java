@@ -5,8 +5,8 @@ public class ControleurGame implements InterfaceControleur {
 	
 	public ControleurGame(Game game) {
 		_game = game;
-		_viewCommand = new ViewCommand(game, this);
 		_viewPacmanGame = new ViewPacmanGame(game, this, _game.getMaze());
+		_viewCommand = new ViewCommand(game, this);
 	}
 	
 	public boolean isInteractive() {
