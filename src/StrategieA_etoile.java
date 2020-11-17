@@ -6,27 +6,65 @@ import java.util.ArrayList;
 public class StrategieA_etoile extends Strategie{
 	
 	public Graph graphe;
-
+	public Game _game;
+	
+	public class Pair{
+		int x;
+		int y;
+	}
+	
 	@Override
 	public AgentAction getAction(Agent agent, Maze maze) {
 		if(agent instanceof Ghost) {
-			if(_game.getTimerCapsule() > 0) {
+			if(_game.getTimerCapsule() > 0) {//avoid pacman if ghosts can be eaten
 				return avoid(agent, maze);
 			}
 			else {
 				return pathToPacman(agent, maze);
 			}
-			
 		}
-		return new AgentAction(4);
+		else {
+			return pathToFood(agent, maze);
+		}
 	}
 	
 	@Override
 	public void setGame(Game game) {
-		_game = game;
-		graphe = new Graph(this._game);
+		this._game = game;
+		graphe = new Graph(this._game, false);
 	}
 	
+	//get position of closest food pellet
+	public Pair getFoodPos(Agent agent, Maze maze) {
+		
+		PositionAgent agentPos = agent.getPosition();
+		
+		Pair bestPos = new Pair();//closest food so far
+		bestPos.x = 0;
+		bestPos.y = 0;
+		double distance = Math.sqrt(Math.pow((bestPos.x-agentPos.getX()), 2) + Math.pow((bestPos.y-agentPos.getY()), 2));
+		//distance between bestPos and agentPos
+		
+		
+		//get position of closest food
+		for(int x = 0; x < maze.getSizeX(); x++) {
+			for(int y = 0; y < maze.getSizeY(); y++) {
+				if(maze.isFood(x, y)) {
+					if(Math.sqrt(Math.pow((x-agentPos.getX()), 2) + Math.pow((y-agentPos.getY()), 2)) < distance) {
+						bestPos.x = x;
+						bestPos.y = y;
+						distance = Math.sqrt(Math.pow((x-agentPos.getX()), 2) + Math.pow((y-agentPos.getY()), 2));
+						//update bestPos
+					}
+				}
+			}
+		}
+		
+		//System.out.println("closest food: " + bestPos.x + ", " + bestPos.y + ", distance = " + distance);
+		
+		return bestPos;
+	}
+		
 	public PositionAgent getPacManPos() {
 		ArrayList<Agent> agents= this._game.getAgents();
 		for (Agent agent : agents) {
@@ -37,6 +75,21 @@ public class StrategieA_etoile extends Strategie{
 		return new PositionAgent(0, 0, 0);
 	}
 	
+	public AgentAction pathToFood(Agent agent, Maze maze) {
+		Pair foodPos = getFoodPos(agent, maze);
+		int goal = foodPos.y*maze.getSizeX() + foodPos.x;
+		int start = agent.getPosition().getY()*maze.getSizeX() + agent.getPosition().getX();
+
+		
+		Graph newGraphe = new Graph(this._game, true);//recreate graph with ghost positions;
+		
+		int cell = newGraphe.A_Star(start, goal, maze);
+		
+		return getAction(agent, maze, cell);
+		
+	}
+	
+	//return next position to get closer to pacman
 	public AgentAction pathToPacman(Agent agent, Maze maze) {
 		PositionAgent pacManPos = getPacManPos();
 		int goal = pacManPos.getY()*_game.getMaze().getSizeX() + pacManPos.getX(); //node number of pacman pos
@@ -44,6 +97,13 @@ public class StrategieA_etoile extends Strategie{
 		
 		int cell = graphe.A_Star(start, goal, maze); //returns the cell number to move to
 		//System.out.println("next cell: " + cell); 
+		
+		
+		return getAction(agent, maze, cell);
+	}
+	
+	
+	public AgentAction getAction(Agent agent, Maze maze, int cell) {
 		
 		if(cell == -1) {
 			//System.out.println("no path, error");
@@ -86,6 +146,7 @@ public class StrategieA_etoile extends Strategie{
 	}
 	
 	
+	//avoid pacman
 	public AgentAction avoid(Agent agent, Maze maze) {
 		PositionAgent pacManPos = getPacManPos();
 		AgentAction action;

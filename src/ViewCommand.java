@@ -54,7 +54,7 @@ public class ViewCommand implements Observer{
 			container.setLayout(new GridLayout(1, 2));
 			container.add(_restartButton);
 			container.add(_nbrTours);
-			_nbrTours.setText((_controleurGame.isInteractive()) ? "Appuiez sur les touches flêchées pour bouger le Pacman." : "Pacman : touches flêchées et Fantôme : touches Z,Q,S,D");
+			_nbrTours.setText("Pacman : touches flêchées / Fantôme : touches Z,Q,S,D");
 		}else {
 			_jframe.setSize(new Dimension(900, 350));
 			container.setLayout(new GridLayout(2, 1));

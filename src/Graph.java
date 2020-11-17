@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.Math.*;
 
-
 public class Graph {
 	
 	public class Node {
@@ -14,13 +13,39 @@ public class Graph {
 		public int To;
 	}
 	
+	public class Pair{
+		int x;
+		int y;
+	}
+	
 	private ArrayList<Node> nodes; //list d'adjacence
 	
-	
 	//make graph from maze
-	public Graph(Game game) {
+	public Graph() {
+		this.nodes = new ArrayList<Node>();
+	}
+	
+public Graph(Game game, boolean avoidGhosts) {
 		
 		this.nodes = new ArrayList<Node>();
+		
+		ArrayList<Pair> ghostPositions = new ArrayList<Pair>();//positions of all ghosts
+		
+		if(avoidGhosts) {
+			for(int a = 0; a < game.getAgents().size(); a++) {
+				if(game.getAgents().get(a) instanceof Ghost) {
+					Pair p = new Pair();
+					p.x = game.getAgents().get(a).getPosition().getX();
+					p.y = game.getAgents().get(a).getPosition().getY();
+					ghostPositions.add(p);
+				}
+			}
+		}
+		
+		
+		
+		
+		
 		
 		Maze maze = game.getMaze();
 		int height = maze.getSizeY();
@@ -34,7 +59,11 @@ public class Graph {
 				temp.numNode = (j*width + i);
 				temp.adjacent = new ArrayList<Integer>();
 				
-				if(!maze.isWall(i, j)) {
+				Pair p = new Pair();
+				p.x = i;
+				p.y = j;
+				
+				if(!(maze.isWall(i, j) || (avoidGhosts && ghostPositions.contains(p))) ) {
 					//check what directions are available
 					if((i-1) > 0 && (i-1) < width && !maze.isWall((i-1), j)) { //east
 						temp.adjacent.add(j*width + (i-1));
@@ -60,7 +89,42 @@ public class Graph {
 		//display();
 	}
 	
+	public Graph clone() {
+		
+		Graph g = new Graph();
+		for(int i = 0; i < nodes.size(); i++) {
+			g.nodes.add(nodes.get(i));
+		}
+		
+		return g;
+	}
 	
+	
+	//update the graph taking into account the position of the ghosts (treating them as walls)
+	public void updateGhosts(Game game, Maze maze) {
+		
+		ArrayList<Agent> agents = game.getAgents();
+		
+		for(int i = 0; i < agents.size(); i++) {
+			if(agents.get(i) instanceof Ghost) {//for all ghosts
+				//get their cell number to be removed from nodes
+				int cell = agents.get(i).getPosition().getY()*maze.getSizeX() + agents.get(i).getPosition().getX();
+				//System.out.println("cell: " + cell);
+				
+				for(int c = 0; c < nodes.size(); c++) {
+					if(nodes.get(c).adjacent.contains(cell)) {//remove as neighbor if possible
+						int index = nodes.get(c).adjacent.indexOf(cell);//get index of neighbor to remove
+						nodes.get(c).adjacent.remove(index);
+						
+					}
+					if(nodes.get(c).numNode == cell) {//remove all neighbors
+						nodes.get(c).adjacent.clear();
+					}
+				}
+			}
+		}
+		
+	}
 	
 	
 	//distance euclidienne entre start et goal
