@@ -24,6 +24,7 @@ public class StrategieA_etoile extends Strategie{
 			}
 		}
 		else {
+			System.out.println("vers food");
 			return pathToFood(agent, maze);
 		}
 	}
@@ -40,9 +41,10 @@ public class StrategieA_etoile extends Strategie{
 		PositionAgent agentPos = agent.getPosition();
 		
 		Pair bestPos = new Pair();//closest food so far
-		bestPos.x = 0;
-		bestPos.y = 0;
-		double distance = Math.sqrt(Math.pow((bestPos.x-agentPos.getX()), 2) + Math.pow((bestPos.y-agentPos.getY()), 2));
+		bestPos.x = -1;
+		bestPos.y = -1;
+		//double distance = Math.sqrt(Math.pow((bestPos.x-agentPos.getX()), 2) + Math.pow((bestPos.y-agentPos.getY()), 2));
+		double distance = -1;
 		//distance between bestPos and agentPos
 		
 		
@@ -50,7 +52,7 @@ public class StrategieA_etoile extends Strategie{
 		for(int x = 0; x < maze.getSizeX(); x++) {
 			for(int y = 0; y < maze.getSizeY(); y++) {
 				if(maze.isFood(x, y)) {
-					if(Math.sqrt(Math.pow((x-agentPos.getX()), 2) + Math.pow((y-agentPos.getY()), 2)) < distance) {
+					if(bestPos.x == -1 || Math.sqrt(Math.pow((x-agentPos.getX()), 2) + Math.pow((y-agentPos.getY()), 2)) < distance) {
 						bestPos.x = x;
 						bestPos.y = y;
 						distance = Math.sqrt(Math.pow((x-agentPos.getX()), 2) + Math.pow((y-agentPos.getY()), 2));
@@ -62,6 +64,7 @@ public class StrategieA_etoile extends Strategie{
 		
 		//System.out.println("closest food: " + bestPos.x + ", " + bestPos.y + ", distance = " + distance);
 		
+		System.out.println(bestPos.x + " " + bestPos.y);
 		return bestPos;
 	}
 		
@@ -85,6 +88,7 @@ public class StrategieA_etoile extends Strategie{
 		
 		int cell = newGraphe.A_Star(start, goal, maze);
 		
+		System.out.println(getAction(agent, maze, cell).get_vx() + " " + getAction(agent, maze, cell).get_vy() + " " + getAction(agent, maze, cell).get_direction());
 		return getAction(agent, maze, cell);
 		
 	}
@@ -98,7 +102,7 @@ public class StrategieA_etoile extends Strategie{
 		int cell = graphe.A_Star(start, goal, maze); //returns the cell number to move to
 		//System.out.println("next cell: " + cell); 
 		
-		
+
 		return getAction(agent, maze, cell);
 	}
 	
